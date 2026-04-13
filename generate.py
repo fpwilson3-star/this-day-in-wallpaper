@@ -15,8 +15,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 PHONE_WIDTH = 1080
 PHONE_HEIGHT = 2340
-IMAGE_ASPECT = "9:16"  # Imagen-supported ratio closest to phone; yields ~1080x1920
-IMAGEN_MODEL = "imagen-4.0-generate-001"
+IMAGE_MODEL = "gemini-3-pro-image-preview"
 TEXT_MODEL = "gemini-2.5-flash"
 
 
@@ -73,25 +72,25 @@ def get_fact_and_prompt(client: genai.Client, date: datetime.date) -> tuple[str,
 
 
 # ---------------------------------------------------------------------------
-# Step 2 — generate the image with Imagen
+# Step 2 — generate the image with Gemini
 # ---------------------------------------------------------------------------
 
 
 def generate_image(client: genai.Client, prompt: str) -> Image.Image:
-    response = client.models.generate_images(
-        model=IMAGEN_MODEL,
-        prompt=prompt,
-        config=types.GenerateImagesConfig(
-            number_of_images=1,
-            aspect_ratio=IMAGE_ASPECT,
-            safety_filter_level="BLOCK_LOW_AND_ABOVE",
-            person_generation="DONT_ALLOW",
+    response = client.models.generate_content(
+        model=IMAGE_MODEL,
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            response_modalities=["IMAGE"],
         ),
     )
 
-    img_bytes = response.generated_images[0].image.image_bytes
-    img = Image.open(BytesIO(img_bytes)).convert("RGB")
-    return img
+    for part in response.candidates[0].content.parts:
+        if part.inline_data is not None:
+            img = Image.open(BytesIO(part.inline_data.data)).convert("RGB")
+            return img
+
+    raise RuntimeError("No image returned in Gemini response")
 
 
 # ---------------------------------------------------------------------------
