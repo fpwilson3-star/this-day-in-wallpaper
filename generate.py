@@ -84,7 +84,7 @@ def generate_image(client: genai.Client, prompt: str) -> Image.Image:
         config=types.GenerateImagesConfig(
             number_of_images=1,
             aspect_ratio=IMAGE_ASPECT,
-            safety_filter_level="BLOCK_ONLY_HIGH",
+            safety_filter_level="BLOCK_LOW_AND_ABOVE",
             person_generation="DONT_ALLOW",
         ),
     )
