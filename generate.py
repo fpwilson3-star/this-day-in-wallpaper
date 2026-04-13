@@ -17,7 +17,7 @@ PHONE_WIDTH = 1080
 PHONE_HEIGHT = 2340
 IMAGE_ASPECT = "9:16"  # Imagen-supported ratio closest to phone; yields ~1080x1920
 IMAGEN_MODEL = "imagen-3.0-generate-002"
-TEXT_MODEL = "gemini-2.0-flash"
+TEXT_MODEL = "gemini-2.5-flash"
 
 
 # ---------------------------------------------------------------------------
