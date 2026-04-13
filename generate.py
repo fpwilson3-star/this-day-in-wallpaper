@@ -76,21 +76,29 @@ def get_fact_and_prompt(client: genai.Client, date: datetime.date) -> tuple[str,
 # ---------------------------------------------------------------------------
 
 
-def generate_image(client: genai.Client, prompt: str) -> Image.Image:
-    response = client.models.generate_content(
-        model=IMAGE_MODEL,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_modalities=["IMAGE"],
-        ),
-    )
-
-    for part in response.candidates[0].content.parts:
-        if part.inline_data is not None:
-            img = Image.open(BytesIO(part.inline_data.data)).convert("RGB")
-            return img
-
-    raise RuntimeError("No image returned in Gemini response")
+def generate_image(client: genai.Client, prompt: str, retries: int = 3) -> Image.Image:
+    last_exc = None
+    for attempt in range(1, retries + 1):
+        try:
+            response = client.models.generate_content(
+                model=IMAGE_MODEL,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_modalities=["IMAGE"],
+                ),
+            )
+            for part in response.candidates[0].content.parts:
+                if part.inline_data is not None:
+                    img = Image.open(BytesIO(part.inline_data.data)).convert("RGB")
+                    return img
+            raise RuntimeError("No image returned in Gemini response")
+        except Exception as exc:
+            last_exc = exc
+            print(f"Image generation attempt {attempt} failed: {exc}")
+            if attempt < retries:
+                import time
+                time.sleep(10 * attempt)
+    raise last_exc
 
 
 # ---------------------------------------------------------------------------
