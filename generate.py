@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 PHONE_WIDTH = 1080
 PHONE_HEIGHT = 2340
 IMAGE_ASPECT = "9:16"  # Imagen-supported ratio closest to phone; yields ~1080x1920
-IMAGEN_MODEL = "imagen-3.0-generate-002"
+IMAGEN_MODEL = "imagen-3.0-generate-001"
 TEXT_MODEL = "gemini-2.5-flash"
 
 
