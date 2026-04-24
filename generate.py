@@ -41,8 +41,7 @@ Return a JSON object with exactly these keys:
   "image_prompt" : Detailed Imagen prompt for a portrait phone wallpaper.
                    Rules for the prompt:
                    - Pure black (#000000) background — this is non-negotiable
-                   - Style: glowing neon scientific infographic, dramatic lighting, bioluminescent or \
-plasma-like colors on black
+                   - Style: Scientific infographic, schematic, white on black
                    - Visually represent the specific fact with recognisable scientific imagery
                    - No text, no words, no labels in the image
                    - Portrait orientation, highly detailed, cinematic"""
